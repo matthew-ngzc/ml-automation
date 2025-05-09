@@ -190,6 +190,74 @@ def decide_movement(hp_ratio):
         else:
             send_command(action)
 
+def move_toward_target(bot_pos, target_pos, coordinate_space="minimap"):
+    dx = target_pos[0] - bot_pos[0]
+    dy = target_pos[1] - bot_pos[1]
+
+    threshold = 5 if coordinate_space == "minimap" else 20  # screen pixels are larger scale
+
+    if abs(dx) < threshold and abs(dy) < threshold:
+        return  # already close enough
+
+    if dx > 0 and dy > 0:
+        send_command("move_down_right")
+    elif dx > 0 and dy < 0:
+        send_command("move_up_right")
+    elif dx < 0 and dy > 0:
+        send_command("move_down_left")
+    elif dx < 0 and dy < 0:
+        send_command("move_up_left")
+    elif abs(dx) > abs(dy):
+        send_command("move_right" if dx > 0 else "move_left")
+    else:
+        send_command("move_down" if dy > 0 else "move_up")
+
+
+# def detect_teammates_on_minimap(minimap_bgr):
+#     minimap_hsv = cv2.cvtColor(minimap_bgr, cv2.COLOR_BGR2HSV)
+
+#     # Teammate ring appears blue; let's use a blue range
+#     lower_blue = np.array([90, 80, 80])
+#     upper_blue = np.array([130, 255, 255])
+
+#     mask = cv2.inRange(minimap_hsv, lower_blue, upper_blue)
+
+#     # Find contours of blue rings
+#     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+#     teammate_positions = []
+#     for cnt in contours:
+#         area = cv2.contourArea(cnt)
+#         if 20 < area < 200:  # filter out tiny noise and giant blobs
+#             M = cv2.moments(cnt)
+#             if M["m00"] != 0:
+#                 cx = int(M["m10"] / M["m00"])
+#                 cy = int(M["m01"] / M["m00"])
+#                 teammate_positions.append((cx, cy))
+
+#     return teammate_positions
+
+# def detect_teammates_on_screen(frame):
+#     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    
+#     # Blue glow/HP arc detection around allies
+#     lower_blue = np.array([90, 80, 80])
+#     upper_blue = np.array([130, 255, 255])
+
+#     mask = cv2.inRange(hsv, lower_blue, upper_blue)
+#     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+#     positions = []
+#     for cnt in contours:
+#         area = cv2.contourArea(cnt)
+#         if 100 < area < 1000:
+#             M = cv2.moments(cnt)
+#             if M["m00"] != 0:
+#                 cx = int(M["m10"] / M["m00"])
+#                 cy = int(M["m01"] / M["m00"])
+#                 positions.append((cx, cy))
+#     return positions
+
 
 # === MAIN LOOP ===
 def main():
