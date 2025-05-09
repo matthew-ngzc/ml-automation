@@ -31,7 +31,7 @@ key_bindings = {
 - Skills : spamming skills 1 and 2
 
 ### How to use:
-0. (Optional) If you want to modify how the code interacts with the actual pressing of keys, modify mobilelegends_ai.ahk, then use the ahk2exe app to convert to a .exe. 
+0. (Optional) If you want to modify how the code interacts with the actual pressing of keys, modify mobilelegends_ai.ahk, then use the ahk2exe app to convert to a .exe. Download ahk from https://www.autohotkey.com/
 1. run rule-based.py. This will ask for 2 clicks to determine where the hp bar is. 1st click is top left of hp bar, 2nd click is bottom right.
 2. once the 2 clicks are done, it will clear command.txt (so that left over commands from the past iteration are not used) and start mobilelegends_ai.exe
 3. The player will start to move automatically. Stop mobilelegends_ai.exe using "esc" key or through task manager -> stop process
