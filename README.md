@@ -53,3 +53,4 @@ key_bindings = {
 ### Current functionality:
 - self detection works, correctly identifies the bot on the minimap even with low hp, although the coordinates are not dead center. Unsure why, this code is mostly AI-ed so I dont rly understand it
 - detection of teammates does not work. Sometimes identifies minions as teammates, sometimes even random spots in the jungle
+- turret detection not tested, code is AI-ed
