@@ -1,26 +1,40 @@
 # ml-automation
 autoplayer for mobile legends on PC
 
-# Key bindings. Set accordingly
+# Key bindings. Set accordingly in your emulator / mobile legends app
+```py
 key_bindings = {
-    "skill_1": "1",
-    "skill_2": "2",
-    "skill_3": "3",
-    "move_up": "w",
-    "move_down": "s",
-    "move_left": "a",
-    "move_right": "d",
-    "attack_basic": "c",
-    "attack_minion": "v",
-    "attack_turret": "x",
-    "upgrade_skill_1": "F1",
-    "upgrade_skill_2": "F2",
-    "upgrade_skill_3": "F3",
-    "spell": "q",
-    "regen": "e",
-    "recall": "b",
-    "buy": "space",
+    "skill_1", ["k"],
+    "skill_2", ["l"],
+    "skill_3", [";"],
+    "skill_4", ["'"],
+    "upgrade_skill_1", ["l"],
+    "upgrade_skill_2", ["o"],
+    "upgrade_skill_3", ["p"],
+    "upgrade_skill_4", ["["],
+    "skill_1_extra", ["i"],
+    "skill_2_extra", ["o"],
+    "skill_3_extra", ["p"],
+    "skill_4_extra", ["["],
+    "move_up", ["w"],
+    "move_down", ["s"],
+    "move_left", ["a"],
+    "move_right", ["d"],
+    "move_up_right", ["w", "d"],
+    "move_up_left", ["w", "a"],
+    "move_down_right", ["s", "d"],
+    "move_down_left", ["s", "a"],
+    "attack_basic", ["j"],
+    "attack_minion", ["n"],
+    "attack_turret", ["u"],
+    "spell", ["h"],
+    "regen", ["g"],
+    "recall", ["b"],
+    "buy", ["Space"],
+    "chat", ["Enter"],
+    "skill_item", ["f"]
 }
+```
 
 ## rule-based.py
 ### Current functionality:
@@ -35,18 +49,23 @@ key_bindings = {
 1. run rule-based.py. This will ask for 2 clicks to determine where the hp bar is. 1st click is top left of hp bar, 2nd click is bottom right.
 2. once the 2 clicks are done, it will clear command.txt (so that left over commands from the past iteration are not used) and start mobilelegends_ai.exe
 3. The player will start to move automatically. Stop mobilelegends_ai.exe using "esc" key or through task manager -> stop process
-4. switch to the IDE and do ctrl + c to stop the code from running. Auto stopping has not been implemented
+4. switch to the IDE and do ctrl + c to stop the code from running. Auto stopping has not been implemented (TODO: detect based on computer vision of the screen, lookout for the tap to continue, or some other UI since it is fixed)
 
 ### Future development
+- make a slightly smarter AI, such that it moves until unsafe location, and hovers (dodge) around the unsafe location
+    - can define unsafe as a place where they took damage?
+    - or an unsafe location is at the outermost alive turret? 
 - make a specific AI for supports, where they just follow a player of choice
     - if there is a nearby player on screen, follow that player, sticking to their south-west so that the healer is always in a safe spot.
     - if there isnt one, path to the nearest teammate based on the minimap
     - path to the teammate, then copy their movement so that the bot is always on their south-west
 - recalling
-    - mana detection, not just hp
-    - tower, enemy detection
+    - mana detection, not just hp. For below 30% hp go to safety and recall
+      - mana is just offset from the hp bar , not sure if need to click to determine the mana box as well. Have a boolean for heroes with no mana
+    - tower, enemy detection (nextime, for now just do path to tower)
     - definition of "safe to recall" - near allied tower, no nearby enemies
-- 
+        - path to the nearest alive allied tower (hardcode the coordinates or the ally towers and the base on the minimap, use computer vision to check if the tower is alive -> check for blue pigment)
+        - if cannot hardcode then do the same strat, just click on all the towers or something
 - once a rule-based version is more or less working, explore reinforcement learning
 
 ## teammate_detection.py
