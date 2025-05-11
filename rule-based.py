@@ -29,23 +29,31 @@ monitor = {
 
 # === KEY BINDINGS ===
 key_bindings = {
-    "skill_1": "1",
-    "skill_2": "2",
-    "skill_3": "3",
+    "skill_1": "k",
+    "skill_2": "l",
+    "skill_3": ";",
+    "skill_4": "'",
+    "upgrade_skill_1": "l",
+    "upgrade_skill_2": "o",
+    "upgrade_skill_3": "p",
+    "upgrade_skill_4": "[",
+    "skill_1_extra": "i",
+    "skill_2_extra": "o",
+    "skill_3_extra": "p",
+    "skill_4_extra": "[",
     "move_up": "w",
     "move_down": "s",
     "move_left": "a",
     "move_right": "d",
-    "attack_basic": "c",
-    "attack_minion": "v",
-    "attack_turret": "x",
-    "upgrade_skill_1": "F1",
-    "upgrade_skill_2": "F2",
-    "upgrade_skill_3": "F3",
-    "spell": "q",
-    "regen": "e",
+    "attack_basic": "j",
+    "attack_minion": "n",
+    "attack_turret": "u",
+    "spell": "h",
+    "regen": "g",
     "recall": "b",
     "buy": "space",
+    "chat" : "enter",
+    "skill_item": "f"
 }
 
 # === RAFAELA HP BAR COORDINATES ===
@@ -76,15 +84,14 @@ def on_click(x, y, button, pressed):
             return False  # Stop listener after second click
 
 
-def send_command(command: str):
-    global last_command
-    if command != last_command:
-        base_path = os.path.dirname(os.path.abspath(__file__))  # Folder where script is saved
-        file_path = os.path.join(base_path, "command.txt")
-        with open(file_path, "w") as f:
-            f.write(command)
-        print(f"[COMMAND] {command} → {file_path}")
-        last_command = command
+def send_commands(command_list: list[str]):
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_path, "command.txt")
+    with open(file_path, "w") as f:
+        for cmd in command_list:
+            f.write(cmd + "\n")
+    print(f"[COMMAND FRAME] {command_list} → {file_path}")
+
 
 
 def get_hp_coordinates_from_mouse():
@@ -127,7 +134,7 @@ def get_hsv_ranges_from_sample(hsv_pixel, h_tol=10, s_tol=80, v_tol=80):
 
 
 
-def get_hp_ratio(frame, hp_top, hp_bottom, hp_left, hp_right):
+def get_hp_ratio(frame, hp_top, hp_bottom, hp_left, hp_right, debug=False):
     # Crop the HP bar from screen
     hp_bar = frame[hp_top:hp_bottom, hp_left:hp_right]
     hsv_img = cv2.cvtColor(hp_bar, cv2.COLOR_BGR2HSV)
@@ -152,9 +159,12 @@ def get_hp_ratio(frame, hp_top, hp_bottom, hp_left, hp_right):
     ratio = green_pixels / total_pixels if total_pixels else 0
 
     # Debug windows
-    cv2.imshow("HP Region", hp_bar)
-    cv2.imshow("Green Mask", combined_mask)
-    cv2.waitKey(1)
+    if debug:
+        cv2.imshow("Original HP Bar", hp_bar)
+        cv2.imshow("HSV HP Bar", hsv_img)
+        cv2.imshow("Sample Region", sample_region)
+        cv2.imshow("Mask", combined_mask)
+
 
     print(f"[HP] Ratio: {ratio:.2f}")
     return ratio
@@ -162,10 +172,13 @@ def get_hp_ratio(frame, hp_top, hp_bottom, hp_left, hp_right):
 
 
 # === MOVEMENT DECISION LOGIC ===
-def decide_movement(hp_ratio):
+def decide_movement(hp_ratio, current_frame_commands : list[str]):
+    action : str
+    #low hp: retreat
     if hp_ratio < 0.3:
         print("[LOGIC] Retreating (down + left)")
-        send_command("move_down_left")
+        action = "move_down_left"
+    #moderate hp: dodge (dont advance)
     elif hp_ratio < 0.6:
         action = random.choice([
             "move_down",
@@ -174,7 +187,7 @@ def decide_movement(hp_ratio):
             "stand_still"
         ])
         print(f"[LOGIC] Dodging: {action}")
-        send_command(action)
+    #high hp: random movement
     else:
         action = random.choice([
             "move_up", "move_down",
@@ -186,11 +199,12 @@ def decide_movement(hp_ratio):
         print(f"[LOGIC] Advancing phase: random action → {action}")
 
         if action == "stand_still":
-            send_command("")  # No key press
-        else:
-            send_command(action)
+            #dont append anything
+            return
+    #append action to current frame commands
+    current_frame_commands.append(action)
 
-def move_toward_target(bot_pos, target_pos, coordinate_space="minimap"):
+def move_toward_target(bot_pos, target_pos, current_frame_commands : list[str], coordinate_space="minimap"):
     dx = target_pos[0] - bot_pos[0]
     dy = target_pos[1] - bot_pos[1]
 
@@ -200,17 +214,26 @@ def move_toward_target(bot_pos, target_pos, coordinate_space="minimap"):
         return  # already close enough
 
     if dx > 0 and dy > 0:
-        send_command("move_down_right")
+        current_frame_commands.append("move_down_right")
     elif dx > 0 and dy < 0:
-        send_command("move_up_right")
+        current_frame_commands.append("move_up_right")
     elif dx < 0 and dy > 0:
-        send_command("move_down_left")
+        current_frame_commands.append("move_down_left")
     elif dx < 0 and dy < 0:
-        send_command("move_up_left")
+        current_frame_commands.append("move_up_left")
     elif abs(dx) > abs(dy):
-        send_command("move_right" if dx > 0 else "move_left")
+        current_frame_commands.append("move_right" if dx > 0 else "move_left")
     else:
-        send_command("move_down" if dy > 0 else "move_up")
+        current_frame_commands.append("move_down" if dy > 0 else "move_up")
+
+# === SKILL USAGE (SPAMMING as long as ready) ===
+def append_skills_if_ready(current_frame_commands: list[str], last_skill_time: float) -> float:
+    current_time = time.time()
+    if current_time - last_skill_time >= 1.0:
+        current_frame_commands.append("spam_skills")
+        return current_time  # update skill timer
+    return last_skill_time
+
 
 
 # def detect_teammates_on_minimap(minimap_bgr):
@@ -266,7 +289,6 @@ def main():
     # Prompt for HP coordinates
     hp_top, hp_bottom, hp_left, hp_right = get_hp_coordinates_from_mouse()
 
-
     print("⏳ Switch to the game window. Starting in 5 seconds...")
     
     # === Clear command.txt ===
@@ -290,16 +312,23 @@ def main():
 
     with mss.mss() as sct:
         while True:
+            current_frame_commands = []
+
             screenshot = np.array(sct.grab(monitor))
             frame = cv2.cvtColor(screenshot, cv2.COLOR_BGRA2BGR)
 
+            # get hp
             hp_ratio = get_hp_ratio(frame, hp_top, hp_bottom, hp_left, hp_right)
-            decide_movement(hp_ratio)
 
-            current_time = time.time()
-            if current_time - last_skill_time >= 1.0:
-                send_command("spam_skills")
-                last_skill_time = current_time
+            #get movement, append to commands
+            decide_movement(hp_ratio, current_frame_commands)
+
+            #append skill commands if ready
+            last_skill_time = append_skills_if_ready(current_frame_commands, last_skill_time)
+
+
+            if current_frame_commands:
+                send_commands(current_frame_commands)
 
             time.sleep(0.2)  # adjust as needed for responsiveness
 
