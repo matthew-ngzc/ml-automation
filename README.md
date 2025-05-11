@@ -1,40 +1,49 @@
 # ml-automation
 autoplayer for mobile legends on PC
-
-# Key bindings. Set accordingly in your emulator / mobile legends app
-```py
-key_bindings = {
-    "skill_1", ["k"],
-    "skill_2", ["l"],
-    "skill_3", [";"],
-    "skill_4", ["'"],
-    "upgrade_skill_1", ["l"],
-    "upgrade_skill_2", ["o"],
-    "upgrade_skill_3", ["p"],
-    "upgrade_skill_4", ["["],
-    "skill_1_extra", ["i"],
-    "skill_2_extra", ["o"],
-    "skill_3_extra", ["p"],
-    "skill_4_extra", ["["],
-    "move_up", ["w"],
-    "move_down", ["s"],
-    "move_left", ["a"],
-    "move_right", ["d"],
-    "move_up_right", ["w", "d"],
-    "move_up_left", ["w", "a"],
-    "move_down_right", ["s", "d"],
-    "move_down_left", ["s", "a"],
-    "attack_basic", ["j"],
-    "attack_minion", ["n"],
-    "attack_turret", ["u"],
-    "spell", ["h"],
-    "regen", ["g"],
-    "recall", ["b"],
-    "buy", ["Space"],
-    "chat", ["Enter"],
-    "skill_item", ["f"]
-}
-```
+# Setup
+1. Download the mobile legends game on PC (through the google play store beta, or emulators)
+2. Set keybindings accordingly in your emulator / mobile legends app
+    <details>
+    <summary>Click to view key bindings (can also be found in the .ahk script)</summary>
+    
+    ```py
+    key_bindings = {
+        "skill_1": ["k"],
+        "skill_2": ["l"],
+        "skill_3": [";"],
+        "skill_4": ["'"],
+        "upgrade_skill_1": ["l"],
+        "upgrade_skill_2": ["o"],
+        "upgrade_skill_3": ["p"],
+        "upgrade_skill_4": ["["],
+        "skill_1_extra": ["i"],
+        "skill_2_extra": ["o"],
+        "skill_3_extra": ["p"],
+        "skill_4_extra": ["["],
+        "move_up": ["w"],
+        "move_down": ["s"],
+        "move_left": ["a"],
+        "move_right": ["d"],
+        "move_up_right": ["w", "d"],
+        "move_up_left": ["w", "a"],
+        "move_down_right": ["s", "d"],
+        "move_down_left": ["s", "a"],
+        "attack_basic": ["j"],
+        "attack_minion": ["n"],
+        "attack_turret": ["u"],
+        "spell": ["h"],
+        "regen": ["g"],
+        "recall": ["b"],
+        "buy": ["Space"],
+        "chat": ["Enter"],
+        "skill_item": ["f"]
+    }
+    </details>
+    ```
+3. Set the in-game minimap to maximum size, flushed to the top left side of the screen
+4. Turn on auto-buy, and auto-upgrade skills, timers to 0 because I don't intend to implement those
+5. Make sure the build is configured correctly since it autobuys
+  
 
 ## rule-based.py
 ### Current functionality:
@@ -45,11 +54,11 @@ key_bindings = {
 - Skills : spamming skills 1 and 2
 
 ### How to use:
-0. (Optional) If you want to modify how the code interacts with the actual pressing of keys, modify mobilelegends_ai.ahk, then use the ahk2exe app to convert to a .exe. Download ahk from https://www.autohotkey.com/
-1. run rule-based.py. This will ask for 2 clicks to determine where the hp bar is. 1st click is top left of hp bar, 2nd click is bottom right.
-2. once the 2 clicks are done, it will clear command.txt (so that left over commands from the past iteration are not used) and start mobilelegends_ai.exe
-3. The player will start to move automatically. Stop mobilelegends_ai.exe using "esc" key or through task manager -> stop process
-4. switch to the IDE and do ctrl + c to stop the code from running. Auto stopping has not been implemented (TODO: detect based on computer vision of the screen, lookout for the tap to continue, or some other UI since it is fixed)
+0. (Optional) If you want to modify how the code interacts with the actual pressing of keys, modify `mobilelegends_ai.ahk`, then use the ahk2exe app to convert to a .exe. Download ahk from https://www.autohotkey.com/
+1. run `rule-based.py`. This will ask for 2 clicks to determine where the hp bar is. 1st click is top left of hp bar, 2nd click is bottom right.
+2. once the 2 clicks are done, it will clear `command.txt` (so that left over commands from the past iteration are not used) and start mobilelegends_ai.exe
+3. The player will start to move automatically. Stop mobilelegends_ai.exe using `Esc` key or through task manager -> stop process
+4. switch to the IDE and do `ctrl + c` to stop the code from running. Auto stopping has not been implemented (TODO: detect based on computer vision of the screen, lookout for the tap to continue, or some other UI since it is fixed)
 
 ### Future development
 - make a slightly smarter AI, such that it moves until unsafe location, and hovers (dodge) around the unsafe location
