@@ -1,8 +1,17 @@
 # ml-automation
 autoplayer for mobile legends on PC
-# Setup
-1. Download the mobile legends game on PC (through the google play store beta, or emulators)
-2. Set keybindings accordingly in your emulator / mobile legends app
+# Setup (for non-tech users, follow all steps. For tech users skip to step 5)
+1. Download VScode (a code editor to run the python code in) from [https://code.visualstudio.com/download](url)
+2. Download Python (language needed to run python script) from [https://www.python.org/downloads/](url)
+   - make sure to check the option "add Python to environment variables" 
+3. Create a new folder and open this folder in vscode. right click on this folder in the left bar and click on open integrated terminal. If dk how use chatgpt
+4. run this command to install the needed dependencies
+   - `pip install mss pynput opencv-python`, if it says pip unknown or something then search how to install pip
+6. Place these 2 files inside the folder (download from this github by clicking onto the files and then the download icon (download raw file) )
+    1. mobilelegends_ai.exe (this will give a warning, press "keep" if u trust me lol)
+    2. rule-based.py
+7. Download the mobile legends game on PC (through the google play store beta, or emulators)
+8. Set keybindings accordingly in your emulator / mobile legends app
     <details>
     <summary>Click to view key bindings (can also be found in the .ahk script)</summary>
     
@@ -40,9 +49,9 @@ autoplayer for mobile legends on PC
     }
     </details>
     ```
-3. Set the in-game minimap to maximum size, flushed to the top left side of the screen
-4. Turn on auto-buy, and auto-upgrade skills, timers to 0 because I don't intend to implement those
-5. Make sure the build is configured correctly since it autobuys
+9. Set the in-game minimap to maximum size, flushed to the top left side of the screen
+10. Turn on auto-buy, and auto-upgrade skills, timers to 0 because I don't intend to implement those
+11. Make sure the build is configured correctly since it autobuys
   
 
 ## rule-based.py
