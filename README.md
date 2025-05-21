@@ -1,8 +1,8 @@
 # ml-automation
 autoplayer for mobile legends on PC
 # Setup (for non-tech users, follow all steps. For tech users skip to step 5)
-1. Download VScode (a code editor to run the python code in) from [https://code.visualstudio.com/download](url)
-2. Download Python (language needed to run python script) from [https://www.python.org/downloads/](url)
+1. Download VScode (a code editor to run the python code in) from [https://code.visualstudio.com/download](url) and run the installer
+2. Download Python (language needed to run python script) from [https://www.python.org/downloads/](url) and run the installer
    - make sure to check the option "add Python to environment variables" 
 3. Create a new folder and open this folder in vscode. right click on this folder in the left bar and click on open integrated terminal. If dk how use chatgpt
 4. run this command to install the needed dependencies
