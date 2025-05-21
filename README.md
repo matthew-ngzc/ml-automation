@@ -1,5 +1,6 @@
 # ml-automation
-autoplayer for mobile legends on PC
+autoplayer for mobile legends on PC. 
+
 I have no idea if this works on linux or mac. Try at your own risk
 # Setup (for non-tech users, follow all steps. For tech users skip to step 5)
 1. Download VScode (a code editor to run the python code in) from [https://code.visualstudio.com/download](url) and run the installer
