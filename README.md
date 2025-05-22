@@ -5,7 +5,7 @@ I have no idea if this works on linux or mac. Try at your own risk
 # Setup (for non-tech users, follow all steps. For tech users skip to step 5)
 1. Download VScode (a code editor to run the python code in) from [https://code.visualstudio.com/download](https://code.visualstudio.com/download) and run the installer
 2. Download Python (language needed to run python script) from [https://www.python.org/downloads/](https://www.python.org/downloads/) and run the installer
-   - make sure to check the option "add Python to environment variables" 
+   - make sure to check the option "add Python to environment variables", if later when u try running the code and it says python not recognised this might be the problem. Simply run the python installer again and click modify to see this option as a checkbox
 3. Create a new folder and open this folder in vscode. right click on this folder in the left bar and click on open integrated terminal. If dk how use chatgpt
 4. run this command to install the needed dependencies
    - `pip install mss pynput opencv-python`, if it says pip unknown or something then search how to install pip
